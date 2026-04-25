@@ -80,7 +80,7 @@
         position: relative;
       }
       li::before {
-        content: "›";
+        content: '›';
         position: absolute;
         left: 0;
         color: var(--accent);
@@ -114,7 +114,9 @@
   <body>
     <main>
       <h1>buffr</h1>
-      <p class="tag">Vim-inspired browser. Native, GPU-accelerated. Rust + CEF.</p>
+      <p class="tag">
+        Vim-inspired browser. Native, GPU-accelerated. Rust + CEF.
+      </p>
 
       <div class="status">
         <strong>Status:</strong> early. Nothing to install yet. Watch the repo
@@ -124,20 +126,34 @@
       <h2>why</h2>
       <ul>
         <li>Modal browsing. Hint-mode for links, ex-style command palette.</li>
-        <li>Native window, native fonts. No Electron, no JVM, no webview wrapper.</li>
-        <li>Rust + CEF — Chromium rendering without an Electron-shaped layer above it.</li>
+        <li>
+          Native window, native fonts. No Electron, no JVM, no webview wrapper.
+        </li>
+        <li>
+          Rust + CEF — Chromium rendering without an Electron-shaped layer above
+          it.
+        </li>
         <li>Mouse + keyboard, both, always.</li>
       </ul>
 
       <h2>links</h2>
       <ul>
-        <li><a href="https://github.com/kryptic-sh/buffr">github.com/kryptic-sh/buffr</a></li>
-        <li><a href="https://www.kryptic.sh/">kryptic.sh</a> — sibling projects</li>
+        <li>
+          <a href="https://github.com/kryptic-sh/buffr"
+            >github.com/kryptic-sh/buffr</a
+          >
+        </li>
+        <li>
+          <a href="https://www.kryptic.sh/">kryptic.sh</a> — sibling projects
+        </li>
       </ul>
 
       <footer>
-        <a href="https://github.com/kryptic-sh">github.com/kryptic-sh</a>
-        · MIT
+        buffr · MIT · built in Rust<br />
+        <a href="https://github.com/kryptic-sh/buffr">github</a> ·
+        <a href="https://www.kryptic.sh/">kryptic.sh</a> ·
+        <a href="https://sqeel.kryptic.sh/">sqeel</a> ·
+        <a href="https://hjkl.kryptic.sh/">hjkl</a>
       </footer>
     </main>
   </body>

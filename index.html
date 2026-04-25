@@ -44,17 +44,30 @@
     />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-T62R4ZLEG5"
-    ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', 'G-T62R4ZLEG5');
+      (function () {
+        var loaded = false;
+        function loadGA() {
+          if (loaded) return;
+          loaded = true;
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-T62R4ZLEG5';
+          document.head.appendChild(s);
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-T62R4ZLEG5');
+        }
+        ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(
+          function (e) {
+            window.addEventListener(e, loadGA, { once: true, passive: true });
+          }
+        );
+        setTimeout(loadGA, 8000);
+      })();
     </script>
     <style>
       :root {

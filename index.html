@@ -3,158 +3,678 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>buffr — vim-inspired browser</title>
+    <meta name="theme-color" content="#0b0d10" />
+    <title>
+      buffr — vim-inspired browser. Native, GPU-accelerated. Rust + CEF.
+    </title>
     <meta
       name="description"
-      content="buffr — vim-inspired browser. Native, GPU-accelerated. Rust + CEF. No Electron."
+      content="buffr — vim-inspired browser. Native, GPU-accelerated. Rust + CEF. No Electron, no JVM, no webview wrappers."
+    />
+    <meta
+      name="keywords"
+      content="buffr, vim browser, modal browser, rust browser, CEF, chromium, native browser, hint mode, kryptic"
     />
     <link rel="canonical" href="https://buffr.kryptic.sh/" />
-    <meta property="og:title" content="buffr" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="buffr — vim-inspired browser" />
     <meta
       property="og:description"
+      content="Vim-inspired browser. Native, GPU-accelerated. Rust + CEF. No Electron."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://buffr.kryptic.sh/" />
+    <meta property="og:site_name" content="buffr" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="buffr — vim-inspired browser" />
+    <meta
+      name="twitter:description"
       content="Vim-inspired browser. Native, GPU-accelerated. Rust + CEF."
     />
-    <meta property="og:url" content="https://buffr.kryptic.sh/" />
-    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <style>
       :root {
-        color-scheme: dark light;
-        --bg: #0d1117;
-        --fg: #c9d1d9;
-        --muted: #8b949e;
+        --bg: #0b0d10;
+        --bg-alt: #11141a;
+        --panel: #141820;
+        --border: #1f2530;
+        --border-strong: #2a3240;
+        --fg: #e5e9f0;
+        --fg-dim: #8b95a7;
+        --fg-muted: #8a93a4;
         --accent: #7aa2f7;
-      }
-      @media (prefers-color-scheme: light) {
-        :root {
-          --bg: #fafafa;
-          --fg: #0d1117;
-          --muted: #57606a;
-          --accent: #1e40af;
-        }
+        --accent-dim: #324a7a;
+        --green: #7ee787;
+        --orange: #ff9e64;
+        --purple: #bb9af7;
+        --keyword: #c792ea;
+        --string: #a3e88a;
+        --comment: #8597a3;
+        --mono:
+          ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, Consolas,
+          monospace;
+        --sans:
+          system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          sans-serif;
       }
       * {
         box-sizing: border-box;
       }
+      html,
       body {
         margin: 0;
+        padding: 0;
+      }
+      body {
         background: var(--bg);
         color: var(--fg);
-        font:
-          16px/1.55 ui-monospace,
-          SFMono-Regular,
-          Menlo,
-          monospace;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 2rem;
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        background-image:
+          radial-gradient(
+            circle at 20% 0%,
+            rgba(122, 162, 247, 0.08),
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(187, 154, 247, 0.05),
+            transparent 45%
+          );
       }
-      main {
-        max-width: 60ch;
-        width: 100%;
-      }
-      h1 {
-        font-size: 2.5rem;
-        margin: 0 0 0.5rem;
-        letter-spacing: -0.02em;
-      }
-      .tag {
-        color: var(--muted);
-        margin: 0 0 2rem;
-      }
-      h2 {
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--muted);
-        margin: 1.75rem 0 0.5rem;
-      }
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-      li {
-        margin: 0 0 0.5rem;
-        padding-left: 1rem;
-        position: relative;
-      }
-      li::before {
-        content: '›';
-        position: absolute;
-        left: 0;
-        color: var(--accent);
+      @media (min-width: 900px) {
+        body {
+          background-attachment: fixed;
+        }
       }
       a {
         color: var(--accent);
         text-decoration: none;
-        border-bottom: 1px solid transparent;
       }
       a:hover {
-        border-bottom-color: var(--accent);
+        text-decoration: underline;
       }
-      .status {
-        background: rgba(255, 158, 100, 0.1);
-        border-left: 3px solid #ff9e64;
-        padding: 0.75rem 1rem;
-        margin: 2rem 0;
-        font-size: 0.9rem;
-        color: var(--muted);
+      code,
+      pre,
+      .mono {
+        font-family: var(--mono);
       }
-      .status strong {
-        color: #ff9e64;
+
+      .wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 0 24px;
       }
+
+      nav.top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        max-width: 1040px;
+        margin: 0 auto;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 18px;
+      }
+      .brand .prompt {
+        color: var(--accent);
+      }
+      .brand .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 16px;
+        background: var(--accent);
+        vertical-align: middle;
+        margin-left: 2px;
+        animation: blink 1s steps(1) infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      nav.top .links {
+        display: flex;
+        gap: 22px;
+        font-size: 14px;
+        color: var(--fg-dim);
+        font-family: var(--mono);
+      }
+      nav.top .links a {
+        color: var(--fg-dim);
+      }
+      nav.top .links a:hover {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      @media (max-width: 560px) {
+        nav.top {
+          flex-wrap: wrap;
+          gap: 12px 16px;
+          padding: 16px 20px;
+          justify-content: center;
+        }
+        nav.top .brand {
+          width: 100%;
+          justify-content: center;
+        }
+        nav.top .links {
+          gap: 14px;
+          flex-wrap: wrap;
+          justify-content: center;
+          width: 100%;
+        }
+      }
+
+      header.hero {
+        padding: 24px 0 40px;
+      }
+      h1 {
+        font-size: clamp(40px, 6vw, 68px);
+        line-height: 1.05;
+        margin: 0 0 20px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      h1 .grad {
+        background: linear-gradient(
+          120deg,
+          var(--accent) 0%,
+          var(--purple) 60%,
+          #6cb4ff 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .tagline {
+        font-size: 20px;
+        color: var(--fg-dim);
+        margin: 0 0 14px;
+        max-width: 640px;
+      }
+      .badges {
+        margin-top: 16px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        font-family: var(--mono);
+        font-size: 12px;
+        padding: 5px 10px;
+        border: 1px solid var(--border-strong);
+        border-radius: 4px;
+        color: var(--fg-dim);
+        background: var(--bg-alt);
+      }
+      .badge.live {
+        color: var(--accent);
+        border-color: var(--accent-dim);
+      }
+      .badge.warn {
+        color: var(--orange);
+        border-color: #7a4a2a;
+      }
+
+      .cta {
+        margin-top: 30px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        font-family: var(--mono);
+        font-size: 14px;
+        font-weight: 500;
+        padding: 11px 18px;
+        border-radius: 6px;
+        border: 1px solid var(--border-strong);
+        color: var(--fg);
+        background: var(--bg-alt);
+        cursor: pointer;
+        transition: all 0.15s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        text-decoration: none;
+        transform: translateY(-1px);
+      }
+      .btn.primary {
+        background: var(--accent);
+        color: #0a142a;
+        border-color: var(--accent);
+        font-weight: 700;
+      }
+      .btn.primary:hover {
+        background: #9bbcfa;
+        color: #0a142a;
+        border-color: #9bbcfa;
+      }
+
+      /* browser mock */
+      .browser {
+        background: var(--panel);
+        border: 1px solid var(--border-strong);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow:
+          0 10px 40px rgba(0, 0, 0, 0.4),
+          0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+        margin: 40px 0 0;
+      }
+      .browser .chrome {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background: #0d1016;
+        border-bottom: 1px solid var(--border);
+      }
+      .browser .chrome .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .browser .chrome .dot.r {
+        background: #ff5f56;
+      }
+      .browser .chrome .dot.y {
+        background: #ffbd2e;
+      }
+      .browser .chrome .dot.g {
+        background: #27c93f;
+      }
+      .urlbar {
+        flex: 1;
+        margin-left: 12px;
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--fg-muted);
+        background: var(--bg-alt);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 4px 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .urlbar .lock {
+        color: var(--green);
+      }
+      .browser .viewport {
+        position: relative;
+        background: #fff;
+        color: #1a1a1a;
+        padding: 28px 32px;
+        min-height: 240px;
+        font-family: ui-serif, Georgia, serif;
+        line-height: 1.5;
+      }
+      .browser .viewport h3 {
+        margin: 0 0 8px;
+        font-size: 22px;
+        color: #111;
+      }
+      .browser .viewport p {
+        margin: 0 0 12px;
+        color: #444;
+        font-size: 14px;
+      }
+      .browser .viewport .vlinks {
+        font-size: 14px;
+      }
+      .browser .viewport .vlinks a {
+        color: #1d4ed8;
+        text-decoration: underline;
+        position: relative;
+        margin-right: 14px;
+      }
+      .hint {
+        position: absolute;
+        background: var(--orange);
+        color: #2a1a0a;
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 11px;
+        padding: 1px 5px;
+        border-radius: 3px;
+        line-height: 1.3;
+        transform: translate(-110%, -2px);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+      }
+      .browser .statusbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 0 6px 0;
+        background: #0d1016;
+        border-top: 1px solid var(--border);
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--fg-dim);
+      }
+      .mode-badge {
+        background: var(--accent);
+        color: #0a142a;
+        font-weight: 700;
+        padding: 5px 14px;
+        letter-spacing: 0.08em;
+      }
+      .mode-badge.hint {
+        background: var(--orange);
+        color: #2a1a0a;
+      }
+
+      section {
+        padding: 64px 0;
+        border-top: 1px solid var(--border);
+      }
+      section h2 {
+        font-family: var(--mono);
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--fg-muted);
+        margin: 0 0 8px;
+        font-weight: 500;
+      }
+      section h2::before {
+        content: '## ';
+        color: var(--accent);
+      }
+      section h3 {
+        font-size: 28px;
+        margin: 0 0 28px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .feat {
+        background: var(--bg-alt);
+        padding: 24px;
+      }
+      .feat .icon {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--accent);
+        margin-bottom: 10px;
+        letter-spacing: 0.1em;
+      }
+      .feat h4 {
+        margin: 0 0 6px;
+        font-size: 17px;
+        font-weight: 600;
+      }
+      .feat p {
+        margin: 0;
+        color: var(--fg-dim);
+        font-size: 14.5px;
+        line-height: 1.55;
+      }
+
+      .keys {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 12px;
+      }
+      .key-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        background: var(--bg-alt);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 14px;
+      }
+      .key-row span {
+        color: var(--fg-dim);
+      }
+      kbd {
+        font-family: var(--mono);
+        font-size: 12px;
+        padding: 2px 7px;
+        background: var(--panel);
+        border: 1px solid var(--border-strong);
+        border-bottom-width: 2px;
+        border-radius: 4px;
+        color: var(--accent);
+      }
+
+      .status-card {
+        background: var(--panel);
+        border: 1px solid var(--border-strong);
+        border-left: 3px solid var(--orange);
+        border-radius: 6px;
+        padding: 18px 22px;
+        color: var(--fg-dim);
+      }
+      .status-card strong {
+        color: var(--orange);
+        font-family: var(--mono);
+      }
+
       footer {
-        color: var(--muted);
-        margin-top: 3rem;
-        font-size: 0.875rem;
+        padding: 40px 0 60px;
+        border-top: 1px solid var(--border);
+        color: var(--fg-muted);
+        font-family: var(--mono);
+        font-size: 13px;
+      }
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      footer a {
+        color: var(--fg-dim);
+      }
+
+      ::selection {
+        background: var(--accent);
+        color: #0a142a;
       }
     </style>
   </head>
   <body>
-    <main>
-      <h1>buffr</h1>
-      <p class="tag">
-        Vim-inspired browser. Native, GPU-accelerated. Rust + CEF.
-      </p>
-
-      <div class="status">
-        <strong>Status:</strong> early. Nothing to install yet. Watch the repo
-        for releases.
+    <nav class="top">
+      <div class="brand">
+        <span class="prompt">$</span> buffr<span class="cursor"></span>
       </div>
+      <div class="links">
+        <a href="#why">why</a>
+        <a href="#keys">keys</a>
+        <a href="#status">status</a>
+        <a
+          href="https://github.com/kryptic-sh/buffr"
+          target="_blank"
+          rel="noopener"
+          >github ↗</a
+        >
+      </div>
+    </nav>
 
-      <h2>why</h2>
-      <ul>
-        <li>Modal browsing. Hint-mode for links, ex-style command palette.</li>
-        <li>
-          Native window, native fonts. No Electron, no JVM, no webview wrapper.
-        </li>
-        <li>
-          Rust + CEF — Chromium rendering without an Electron-shaped layer above
-          it.
-        </li>
-        <li>Mouse + keyboard, both, always.</li>
-      </ul>
+    <main class="wrap">
+      <header class="hero">
+        <div class="badges">
+          <span class="badge warn">● early</span>
+          <span class="badge">MIT</span>
+          <span class="badge">Rust + CEF</span>
+        </div>
+        <h1>
+          Vim-inspired<br />
+          <span class="grad">browser.</span>
+        </h1>
+        <p class="tagline">Native, GPU-accelerated. Rust + CEF.</p>
+        <p class="tagline" style="color: var(--fg-muted); font-size: 16px">
+          Chromium rendering without an Electron-shaped layer above it.
+        </p>
 
-      <h2>links</h2>
-      <ul>
-        <li>
-          <a href="https://github.com/kryptic-sh/buffr"
-            >github.com/kryptic-sh/buffr</a
+        <div class="cta">
+          <a
+            class="btn primary"
+            href="https://github.com/kryptic-sh/buffr"
+            target="_blank"
+            rel="noopener"
+            >view on github →</a
           >
-        </li>
-        <li>
-          <a href="https://www.kryptic.sh/">kryptic.sh</a> — sibling projects
-        </li>
-      </ul>
+          <a class="btn" href="#why">why buffr ↓</a>
+        </div>
 
-      <footer>
-        buffr · MIT · built in Rust<br />
-        <a href="https://github.com/kryptic-sh/buffr">github</a> ·
-        <a href="https://www.kryptic.sh/">kryptic.sh</a> ·
-        <a href="https://sqeel.kryptic.sh/">sqeel</a> ·
-        <a href="https://hjkl.kryptic.sh/">hjkl</a>
-      </footer>
+        <div class="browser">
+          <div class="chrome">
+            <span class="dot r"></span><span class="dot y"></span
+            ><span class="dot g"></span>
+            <div class="urlbar">
+              <span class="lock">●</span>
+              <span>https://news.ycombinator.com/</span>
+            </div>
+          </div>
+          <div class="viewport">
+            <h3>Hacker News</h3>
+            <p>
+              Modal browsing, hint-mode for links, ex-style command palette.
+            </p>
+            <div class="vlinks">
+              <a href="#"><span class="hint">f</span>show comments</a>
+              <a href="#"><span class="hint">d</span>open in tab</a>
+              <a href="#"><span class="hint">s</span>save</a>
+              <a href="#"><span class="hint">a</span>archive</a>
+            </div>
+          </div>
+          <div class="statusbar">
+            <span class="mode-badge hint">HINT</span>
+            <span>press a letter to follow · esc to cancel</span>
+          </div>
+        </div>
+      </header>
+
+      <section id="why">
+        <h2>why</h2>
+        <h3>A browser shaped like vim, not chrome.</h3>
+        <div class="grid">
+          <div class="feat">
+            <div class="icon">01 — INPUT</div>
+            <h4>Modal browsing</h4>
+            <p>
+              Normal/insert/visual modes. Real motions, real text objects, real
+              ex commands.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="icon">02 — LINKS</div>
+            <h4>Hint mode</h4>
+            <p>
+              Press <kbd>f</kbd>, every link gets a label. Type the label,
+              you're there. No mouse needed.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="icon">03 — RENDER</div>
+            <h4>Rust + CEF</h4>
+            <p>
+              Chromium rendering, native window, native fonts. No Electron, no
+              JVM, no webview wrapper.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="icon">04 — GPU</div>
+            <h4>GPU-accelerated</h4>
+            <p>
+              Compositing on the GPU. Smooth scroll, fast paint, low-latency
+              input.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="icon">05 — INTERACTION</div>
+            <h4>Mouse + keyboard</h4>
+            <p>
+              Both, always. Power users get keys. Everyone else gets mice.
+              Neither is second-class.
+            </p>
+          </div>
+          <div class="feat">
+            <div class="icon">06 — PRIVACY</div>
+            <h4>Zero telemetry</h4>
+            <p>No analytics. No phone-home. Your browsing, your business.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="keys">
+        <h2>keys</h2>
+        <h3>The map you already know.</h3>
+        <div class="keys">
+          <div class="key-row"><span>Hint mode</span><kbd>f</kbd></div>
+          <div class="key-row"><span>Hint, new tab</span><kbd>F</kbd></div>
+          <div class="key-row">
+            <span>Scroll down / up</span><kbd>j / k</kbd>
+          </div>
+          <div class="key-row"><span>Top / bottom</span><kbd>gg / G</kbd></div>
+          <div class="key-row"><span>Back / forward</span><kbd>H / L</kbd></div>
+          <div class="key-row">
+            <span>Next / prev tab</span><kbd>gt / gT</kbd>
+          </div>
+          <div class="key-row"><span>Open URL</span><kbd>:o</kbd></div>
+          <div class="key-row"><span>Open in tab</span><kbd>:tabnew</kbd></div>
+          <div class="key-row"><span>Find on page</span><kbd>/</kbd></div>
+          <div class="key-row"><span>Quit</span><kbd>:q</kbd></div>
+        </div>
+      </section>
+
+      <section id="status">
+        <h2>status</h2>
+        <h3>Pre-release. Watch the repo.</h3>
+        <div class="status-card">
+          <p style="margin: 0 0 8px">
+            <strong>Status:</strong> early. Nothing to install yet.
+          </p>
+          <p style="margin: 0">
+            CEF embedding, modal FSM, hint engine — all in flight. Star
+            <a href="https://github.com/kryptic-sh/buffr"
+              >github.com/kryptic-sh/buffr</a
+            >
+            for releases. Modal layer powered by
+            <a href="https://hjkl.kryptic.sh/">hjkl</a>.
+          </p>
+        </div>
+      </section>
     </main>
+
+    <footer>
+      <div class="wrap footer-inner">
+        <div>buffr · MIT · built in Rust</div>
+        <div>
+          <a href="https://github.com/kryptic-sh/buffr">github</a> ·
+          <a href="https://www.kryptic.sh/">kryptic.sh</a> ·
+          <a href="https://sqeel.kryptic.sh/">sqeel</a> ·
+          <a href="https://hjkl.kryptic.sh/">hjkl</a>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

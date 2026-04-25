@@ -43,6 +43,25 @@
       content="https://buffr.kryptic.sh/og-image.png"
     />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "buffr",
+        "description": "Vim-inspired browser. Native, GPU-accelerated. Rust + CEF.",
+        "url": "https://buffr.kryptic.sh/",
+        "applicationCategory": "WebBrowser",
+        "operatingSystem": "Linux, macOS, Windows",
+        "programmingLanguage": "Rust",
+        "license": "https://opensource.org/licenses/MIT",
+        "codeRepository": "https://github.com/kryptic-sh/buffr",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
     <!-- Google tag (gtag.js) -->
     <script>
       (function () {
@@ -424,6 +443,8 @@
       section {
         padding: 64px 0;
         border-top: 1px solid var(--border);
+        content-visibility: auto;
+        contain-intrinsic-size: 1px 800px;
       }
       section h2 {
         font-family: var(--mono);

@@ -376,6 +376,35 @@
           0 0 0 1px rgba(255, 255, 255, 0.02) inset;
         margin: 40px 0 0;
       }
+      /* mac-style title bar — matches the other kryptic-sh sample pages */
+      .browser .titlebar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 14px;
+        background: #0a0c11;
+        border-bottom: 1px solid var(--border);
+      }
+      .browser .titlebar .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .browser .titlebar .dot.r {
+        background: #ff5f56;
+      }
+      .browser .titlebar .dot.y {
+        background: #ffbd2e;
+      }
+      .browser .titlebar .dot.g {
+        background: #27c93f;
+      }
+      .browser .titlebar .title {
+        margin-left: 10px;
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--fg-muted);
+      }
       /* tab strip — TAB_STRIP_HEIGHT ≈ 34px */
       .browser .tabstrip {
         display: flex;
@@ -711,6 +740,11 @@
         </div>
 
         <div class="browser">
+          <div class="titlebar">
+            <span class="dot r"></span><span class="dot y"></span
+            ><span class="dot g"></span>
+            <span class="title">buffr</span>
+          </div>
           <div class="tabstrip" aria-label="tab strip">
             <span class="tab pinned" title="hjkl (pinned)">*</span>
             <span class="tab active">Hacker News</span>

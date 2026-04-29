@@ -439,10 +439,10 @@
         padding: 0;
         justify-content: center;
         font-weight: 700;
-        color: #c85ae0;
+        color: #7aa2f7;
       }
       .browser .tab.active {
-        background: var(--panel);
+        background: #1c2331;
         color: var(--fg);
       }
       .browser .tab.active::after {
@@ -452,7 +452,7 @@
         right: 6px;
         bottom: 0;
         height: 2px;
-        background: #c85ae0;
+        background: #7aa2f7;
       }
       .browser .viewport {
         position: relative;
@@ -504,7 +504,7 @@
       .browser .statusbar {
         display: flex;
         align-items: stretch;
-        background: #2a1a2e; /* HINT mode bg from buffr-ui::lib */
+        background: #1a1f2e; /* Command mode bg — pairs with page accent */
         border-top: 1px solid var(--border);
         font-family: var(--mono);
         font-size: 12px;
@@ -546,8 +546,8 @@
         align-items: center;
       }
       .mode-badge.hint {
-        background: #c85ae0; /* mode_accent(Hint) */
-        color: #ffffff;
+        background: var(--accent);
+        color: #0a142a;
       }
       .mode-badge.normal {
         background: #4ac95c; /* mode_accent(Normal) */

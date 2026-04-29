@@ -365,7 +365,7 @@
         border-color: #9bbcfa;
       }
 
-      /* browser mock */
+      /* browser mock — mirrors apps/buffr layout: tab strip → page → statusline */
       .browser {
         background: var(--panel);
         border: 1px solid var(--border-strong);
@@ -376,44 +376,54 @@
           0 0 0 1px rgba(255, 255, 255, 0.02) inset;
         margin: 40px 0 0;
       }
-      .browser .chrome {
+      /* tab strip — TAB_STRIP_HEIGHT ≈ 34px */
+      .browser .tabstrip {
         display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 14px;
+        align-items: stretch;
+        gap: 2px;
+        padding: 4px 4px 0;
         background: #0d1016;
         border-bottom: 1px solid var(--border);
+        height: 34px;
+        box-sizing: border-box;
       }
-      .browser .chrome .dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-      }
-      .browser .chrome .dot.r {
-        background: #ff5f56;
-      }
-      .browser .chrome .dot.y {
-        background: #ffbd2e;
-      }
-      .browser .chrome .dot.g {
-        background: #27c93f;
-      }
-      .urlbar {
-        flex: 1;
-        margin-left: 12px;
+      .browser .tab {
         font-family: var(--mono);
         font-size: 12px;
         color: var(--fg-muted);
-        background: var(--bg-alt);
-        border: 1px solid var(--border);
-        border-radius: 4px;
-        padding: 4px 10px;
-        display: flex;
+        background: #14171f;
+        border-radius: 4px 4px 0 0;
+        padding: 0 12px;
+        display: inline-flex;
         align-items: center;
         gap: 6px;
+        max-width: 220px;
+        min-width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: relative;
       }
-      .urlbar .lock {
-        color: var(--green);
+      .browser .tab.pinned {
+        min-width: 0;
+        width: 32px;
+        padding: 0;
+        justify-content: center;
+        font-weight: 700;
+        color: #c85ae0;
+      }
+      .browser .tab.active {
+        background: var(--panel);
+        color: var(--fg);
+      }
+      .browser .tab.active::after {
+        content: '';
+        position: absolute;
+        left: 6px;
+        right: 6px;
+        bottom: 0;
+        height: 2px;
+        background: #c85ae0;
       }
       .browser .viewport {
         position: relative;
@@ -461,27 +471,58 @@
         line-height: 1.4;
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
       }
+      /* statusline — STATUSLINE_HEIGHT ≈ 30px. mode block left, url, right cell */
       .browser .statusbar {
         display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 6px 12px 6px 12px;
-        background: #0d1016;
+        align-items: stretch;
+        background: #2a1a2e; /* HINT mode bg from buffr-ui::lib */
         border-top: 1px solid var(--border);
         font-family: var(--mono);
         font-size: 12px;
-        color: var(--fg-dim);
+        color: #eeeeee;
+        height: 30px;
+        box-sizing: border-box;
+      }
+      .browser .statusbar .url {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 10px;
+        color: #cfcfcf;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .browser .statusbar .url .lock {
+        color: #66e08a; /* COLOUR_CERT_SECURE */
+      }
+      .browser .statusbar .right {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 10px;
+        color: #cfcfcf;
+      }
+      .browser .statusbar .right .upd {
+        color: #e0c85a; /* COLOUR_UPDATE */
       }
       .mode-badge {
         background: var(--accent);
         color: #0a142a;
         font-weight: 700;
-        padding: 5px 14px;
+        padding: 0 14px;
         letter-spacing: 0.08em;
+        display: inline-flex;
+        align-items: center;
       }
       .mode-badge.hint {
-        background: var(--orange);
-        color: #2a1a0a;
+        background: #c85ae0; /* mode_accent(Hint) */
+        color: #ffffff;
+      }
+      .mode-badge.normal {
+        background: #4ac95c; /* mode_accent(Normal) */
+        color: #0a200a;
       }
 
       section {
@@ -670,13 +711,11 @@
         </div>
 
         <div class="browser">
-          <div class="chrome">
-            <span class="dot r"></span><span class="dot y"></span
-            ><span class="dot g"></span>
-            <div class="urlbar">
-              <span class="lock">●</span>
-              <span>https://news.ycombinator.com/</span>
-            </div>
+          <div class="tabstrip" aria-label="tab strip">
+            <span class="tab pinned" title="hjkl (pinned)">*</span>
+            <span class="tab active">Hacker News</span>
+            <span class="tab">github.com/kryptic-sh/buffr</span>
+            <span class="tab">MDN — KeyboardEvent</span>
           </div>
           <div class="viewport">
             <h3>Hacker News</h3>
@@ -700,7 +739,14 @@
           </div>
           <div class="statusbar">
             <span class="mode-badge hint">HINT</span>
-            <span>press a letter to follow · esc to cancel</span>
+            <span class="url"
+              ><span class="lock" title="secure">●</span
+              ><span>https://news.ycombinator.com/</span></span
+            >
+            <span class="right"
+              ><span>4 matches</span><span class="upd">* upd</span
+              ><span>100%</span></span
+            >
           </div>
         </div>
       </header>

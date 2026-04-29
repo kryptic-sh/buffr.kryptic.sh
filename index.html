@@ -107,8 +107,12 @@
         --keyword: #c792ea;
         --string: #a3e88a;
         --comment: #8597a3;
-        --mono: "Hack", "JetBrains Mono", "DejaVu Sans Mono", "Liberation Mono", monospace;
-        --sans: "Hack", "JetBrains Mono", "DejaVu Sans Mono", "Liberation Mono", monospace;
+        --mono:
+          'Hack', 'JetBrains Mono', 'DejaVu Sans Mono', 'Liberation Mono',
+          monospace;
+        --sans:
+          'Hack', 'JetBrains Mono', 'DejaVu Sans Mono', 'Liberation Mono',
+          monospace;
       }
       * {
         box-sizing: border-box;
@@ -641,7 +645,7 @@
     <main class="wrap">
       <header class="hero">
         <div class="badges">
-          <span class="badge warn">● 0.0.1 · early</span>
+          <span class="badge">● 0.1.0 · live</span>
           <span class="badge">MIT</span>
           <span class="badge">Rust + CEF</span>
         </div>
@@ -776,22 +780,25 @@
 
       <section id="status">
         <h2>status</h2>
-        <h3>Pre-release. Scaffold growing.</h3>
+        <h3>0.1.0 · first tagged release.</h3>
         <div class="status-card">
           <p style="margin: 0 0 8px">
-            <strong>Status:</strong> early (<code>0.0.1</code>). Modal engine
-            wired (hjkl <code>=0.1.0</code>), TOML config schema with
-            span-aware errors, file watcher + hot reload, clap CLI
-            (<code>--print-config</code>, <code>--check-config</code>,
-            <code>--homepage</code>). Permission prompt overlay with SQLite
-            decision store. Packaging assets (.desktop entry).
+            <strong>Live in <code>0.1.0</code>:</strong> multi-tab browsing;
+            popup windows (<code>window.open</code>, OAuth) render in dedicated
+            buffr windows with read-only address bars and preserve
+            <code>window.opener</code>; <code>target="_blank"</code> and
+            Ctrl+click open in tabs; two-finger horizontal swipe navigates
+            browser history; vim modal engine (hjkl <code>=0.1.0</code>) wired
+            for page-mode dispatch and insert-mode text editing; history /
+            bookmarks / downloads / permissions / zoom data layers persisted to
+            SQLite.
           </p>
           <p style="margin: 0">
-            CEF embedding and hint engine still in flight. Star
+            All workspace crates published to crates.io. Star
             <a href="https://github.com/kryptic-sh/buffr"
               >github.com/kryptic-sh/buffr</a
             >
-            for releases. Modal layer shared with the
+            for the next release. Modal layer shared with the
             <a href="https://hjkl.kryptic.sh/">hjkl</a> editor.
           </p>
         </div>

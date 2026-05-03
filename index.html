@@ -715,7 +715,7 @@
     <main class="wrap">
       <header class="hero">
         <div class="badges">
-          <span class="badge live">● 0.1.0 · live</span>
+          <span class="badge live">● 0.1.28 · live</span>
           <span class="badge">MIT</span>
           <span class="badge">Rust + CEF</span>
         </div>
@@ -875,25 +875,32 @@
 
       <section id="status">
         <h2>status</h2>
-        <h3>0.1.0 · first tagged release.</h3>
+        <h3>0.1.28 · current release.</h3>
         <div class="status-card">
           <p style="margin: 0 0 8px">
-            <strong>Live in <code>0.1.0</code>:</strong> multi-tab browsing;
+            <strong>Live in <code>0.1.28</code>:</strong> multi-tab browsing;
             popup windows (<code>window.open</code>, OAuth) render in dedicated
             buffr windows with read-only address bars and preserve
             <code>window.opener</code>; <code>target="_blank"</code> and
             Ctrl+click open in tabs; two-finger horizontal swipe navigates
-            browser history; vim modal engine (hjkl <code>=0.1.0</code>) wired
-            for page-mode dispatch and insert-mode text editing; history /
-            bookmarks / downloads / permissions / zoom data layers persisted to
-            SQLite.
+            browser history; vim modal engine wired for page-mode dispatch and
+            insert-mode text editing; history / bookmarks / downloads /
+            permissions / zoom data layers persisted to SQLite.
+          </p>
+          <p style="margin: 0 0 8px">
+            <strong>Added since 0.1.0:</strong> per-monitor HiDPI scaling; ASCII
+            loading animation across reload + navigation; single-instance
+            launching with URL forwarding (open a link → new tab in the existing
+            window); native Wayland clipboard via
+            <a href="https://crates.io/crates/hjkl-clipboard">hjkl-clipboard</a>
+            0.4; AUR package; expanded release matrix (Linux x86_64 / aarch64,
+            macOS arm64, Windows x64 / arm64).
           </p>
           <p style="margin: 0">
-            All workspace crates published to crates.io. Star
-            <a href="https://github.com/kryptic-sh/buffr"
-              >github.com/kryptic-sh/buffr</a
-            >
-            for the next release. Modal layer shared with the
+            Grab a binary from
+            <a href="https://github.com/kryptic-sh/buffr/releases"
+              >github.com/kryptic-sh/buffr/releases</a
+            >. Modal layer shared with the
             <a href="https://hjkl.kryptic.sh/">hjkl</a> editor.
           </p>
         </div>
